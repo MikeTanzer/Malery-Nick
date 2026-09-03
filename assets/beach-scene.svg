@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <!-- sky, stepped solid bands (no gradients: MuPDF flattens them) -->
+  <rect x="0" y="0"   width="1280" height="120" fill="#2E6E86"/>
+  <rect x="0" y="120" width="1280" height="110" fill="#3A7F92"/>
+  <rect x="0" y="230" width="1280" height="100" fill="#4A8F9D"/>
+  <rect x="0" y="330" width="1280" height="70"  fill="#59A2A8"/>
+  <rect x="0" y="400" width="1280" height="60"  fill="#74B2AE"/>
+
+  <!-- sun -->
+  <circle cx="1010" cy="150" r="74" fill="#F3D9A4"/>
+  <!-- gulls -->
+  <path d="M250 130q16-13 32 0M304 100q13-11 26 0" stroke="#DCEBE6" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- horizon water -->
+  <path d="M0 392q160 26 320 6t320 8 320-6 320 10v70H0Z" fill="#2F6C7E"/>
+  <!-- mid surf -->
+  <path d="M0 452q180 30 360 8t360 12 360-8 200 14v64H0Z" fill="#4E9AA4"/>
+  <!-- foam line -->
+  <path d="M0 504q200 26 400 6t400 10 480-4" stroke="#EAF3EE" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <!-- wet sand -->
+  <path d="M0 522q220 28 440 6t420 10 420-6v188H0Z" fill="#CBB68F"/>
+  <!-- dry sand -->
+  <path d="M0 578q260 24 520 4t760 8v130H0Z" fill="#E0CDA8"/>
+
+  <!-- pebbles -->
+  <circle cx="210" cy="650" r="9" fill="#B8A382"/>
+  <circle cx="352" cy="688" r="7" fill="#BFAA88"/>
+  <circle cx="930" cy="664" r="8" fill="#B8A382"/>
+  <circle cx="1104" cy="702" r="6" fill="#BFAA88"/>
+
+  <!-- volunteer standing, holding a blue collection bag -->
+  <g fill="#2F4A52">
+    <circle cx="470" cy="558" r="17"/>
+    <path d="M453 582c0-9 8-17 17-17s17 8 17 17v42h-34Z"/>
+    <path d="M487 596l26 10-6 13-27-10Z"/>
+  </g>
+  <rect x="504" y="610" width="36" height="46" rx="9" fill="#3C6E8F"/>
+
+  <!-- volunteer crouching to pick up litter -->
+  <g fill="#2F4A52">
+    <circle cx="742" cy="588" r="14"/>
+    <path d="M725 612c4-11 12-15 21-15s17 6 19 17l4 22h-48Z"/>
+  </g>
+</svg>
