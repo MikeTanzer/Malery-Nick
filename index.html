@@ -1291,12 +1291,16 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     });
 
     // Some contexts refuse autoplay outright (Low Power Mode, strict media settings).
-    // Start on the viewer's first interaction rather than leaving a frozen frame.
-    var onFirstGesture = function(){
+    // Retry on interaction, and keep listening until playback actually starts — a
+    // refused attempt must not consume the retry.
+    var onGesture = function(){
       kickAll();
-      GESTURES.forEach(function(e){ window.removeEventListener(e, onFirstGesture, true); });
+      setTimeout(function(){
+        var playing = loops.every(function(v){ return !v.paused; });
+        if(playing) GESTURES.forEach(function(e){ window.removeEventListener(e, onGesture, true); });
+      }, 250);
     };
-    GESTURES.forEach(function(e){ window.addEventListener(e, onFirstGesture, true); });
+    GESTURES.forEach(function(e){ window.addEventListener(e, onGesture, true); });
 
     // Backgrounded tabs pause the clip; resume when the page is looked at again.
     document.addEventListener('visibilitychange', function(){
