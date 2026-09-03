@@ -3,8 +3,14 @@
 A clickable, nine-screen mockup of **Helping Hand**, the transparency-first global giving and
 volunteering platform described in the 2026 seed case study.
 
-Open [`index.html`](index.html) in any browser. It is a single self-contained file — no build step,
-no dependencies, no network calls.
+Two builds, both single self-contained files — no build step, no dependencies, no network calls.
+
+| File | What it is |
+|---|---|
+| [`index.html`](index.html) | **The app prototype.** Just the phone. Goes full-bleed on mobile, so it demos like a real app on a handset. This is what GitHub Pages serves. |
+| [`case-study-board.html`](case-study-board.html) | **The annotated board.** The same nine screens on a presentation canvas, each paired with a handoff panel listing its purpose, its features, the backend it needs, and the phase KPIs — all drawn from the case study. Use this one for the spec. |
+
+Open either in any browser.
 
 ## Screens
 
@@ -20,13 +26,11 @@ no dependencies, no network calls.
 | 08 | The Bank | Disbursement ledger with recipients and clearing dates, tax receipt |
 | 09 | Impact Passport | Stamps, leaderboard, squad goal, CSR reward — Phases 2–5 |
 
-Each screen is paired with a handoff panel listing its purpose, its features, and the backend it
-needs, drawn from the case study.
-
 ### What's interactive
 
-The bottom tab bar, the flow rail, the Traveling Mode switch, the cause tags, the Bank's
-traced / pending / receipts segments, and the three scan targets in the viewfinder.
+In both builds: the bottom tab bar, the in-app links between screens, the Traveling Mode switch,
+the cause tags, the Bank's traced / pending / receipts segments, and the three scan targets in the
+viewfinder. The board additionally carries a flow rail for jumping straight to any screen.
 
 ## Design notes
 
@@ -49,7 +53,7 @@ Waves, foam, gulls and a sun shimmer move; the volunteer silhouettes and the cam
 Mean per-pixel difference between the first and last frame is 3.62/255, so it loops with no visible
 seam.
 
-In `index.html` the clip is inlined as a data URI and shared by both the card and the event hero.
+In both builds the clip is inlined as a data URI and shared by both the card and the event hero.
 The static SVG scene sits underneath as a fallback, and the video is skipped entirely under
 `prefers-reduced-motion`.
 

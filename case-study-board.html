@@ -1,5 +1,4 @@
 <title>Helping Hand</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Libre+Franklin:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -86,13 +85,37 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--gold-deep);outline-offset:2px;border-radius:4px}
 .mono{font-family:"IBM Plex Mono", ui-monospace, monospace;font-variant-numeric:tabular-nums}
 
-/* ============ app shell ============ */
-.app-shell{
-  min-height:100vh;min-height:100dvh;
-  display:grid;place-items:center;
-  padding:24px;
+/* ============ page shell ============ */
+.page{max-width:1240px;margin:0 auto;padding:40px 24px 72px}
+.masthead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:24px 40px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.mark{display:flex;align-items:center;gap:12px}
+.mark-badge{width:38px;height:38px;border-radius:11px;background:var(--ink);display:grid;place-items:center;flex:none}
+.mark-badge svg{width:22px;height:22px}
+.mark h1{
+  font-family:"Newsreader",Georgia,serif;font-weight:500;
+  font-size:30px;line-height:1;letter-spacing:-.015em;margin:0;
 }
-.device-slot{width:100%;max-width:390px;display:flex;justify-content:center}
+.mark p{margin:3px 0 0;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+.masthead-note{margin:0;max-width:46ch;font-size:13.5px;color:var(--text-2)}
+.masthead-note b{color:var(--text);font-weight:600}
+
+/* screen rail */
+.rail{margin:26px 0 30px}
+.rail-label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+.rail-track{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.chip{
+  flex:none;display:flex;align-items:center;gap:8px;
+  padding:8px 13px;border:1px solid var(--line);border-radius:999px;
+  background:var(--card);font-size:13px;font-weight:500;color:var(--text-2);
+  white-space:nowrap;transition:border-color .16s, color .16s, background .16s;
+}
+.chip:hover{border-color:var(--text-3);color:var(--text)}
+.chip .num{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--text-3)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
+.chip[aria-pressed="true"] .num{color:var(--gold)}
+
+/* stage */
+.stage{display:grid;grid-template-columns:minmax(0,390px) minmax(0,1fr);gap:56px;align-items:start}
 
 /* ============ device ============ */
 .device-col{position:sticky;top:28px}
@@ -104,7 +127,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   border:1px solid rgba(255,255,255,.07);
 }
 .screen{
-  position:relative;height:min(824px, calc(100dvh - 70px));border-radius:36px;overflow:hidden;
+  position:relative;height:800px;border-radius:36px;overflow:hidden;
   background:var(--card);display:flex;flex-direction:column;
 }
 .statusbar{
@@ -118,8 +141,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   flex:none;display:flex;align-items:center;justify-content:space-between;
   padding:4px 20px 12px;
 }
-.appbar #backBtn{display:grid;place-items:center;width:26px;height:26px;margin-left:-4px;color:var(--text-2)}
-.appbar #backBtn svg{width:20px;height:20px}
 .appbar .wordmark{font-family:"Newsreader",Georgia,serif;font-size:21px;font-weight:600;letter-spacing:-.01em}
 .appbar .wordmark span{color:var(--gold-deep)}
 .appbar-icons{display:flex;gap:14px;color:var(--text-2)}
@@ -332,21 +353,103 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .ring .mid b{font-family:"IBM Plex Mono",monospace;font-size:15px;line-height:1}
 .ring .mid s{text-decoration:none;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)}
 
-@media (max-width:560px){
-  /* full-bleed: the app owns the whole viewport, no device frame */
-  .app-shell{padding:0}
-  .device-slot{max-width:none}
-  .device{border-radius:0;padding:0;border:0;box-shadow:none;max-width:none}
-  .screen{height:100vh;height:100dvh;border-radius:0}
-  .statusbar{padding-top:max(14px, env(safe-area-inset-top))}
-  .tabbar{padding-bottom:max(16px, env(safe-area-inset-bottom))}
+/* ============ handoff panel ============ */
+.notes-col{min-width:0;padding-top:4px}
+.note{display:none;flex-direction:column;gap:26px}
+.note.on{display:flex}
+.note-head{display:flex;flex-direction:column;gap:10px}
+.note-kicker{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);font-weight:700}
+.note-kicker .n{font-family:"IBM Plex Mono",monospace;letter-spacing:0;color:var(--text-3)}
+.note h2{
+  font-family:"Newsreader",Georgia,serif;font-weight:500;font-size:clamp(28px,3.4vw,40px);
+  line-height:1.08;letter-spacing:-.022em;margin:0;max-width:22ch;text-wrap:balance;
+}
+.note-lede{margin:0;font-size:16px;line-height:1.62;color:var(--text-2);max-width:60ch}
+.note-lede b{color:var(--text);font-weight:600}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:26px 34px}
+.col h3{
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);
+  font-weight:700;margin:0 0 12px;padding-bottom:9px;border-bottom:1px solid var(--line);
+}
+.col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+.col li{font-size:13.5px;line-height:1.5;color:var(--text-2);position:relative;padding-left:15px}
+.col li::before{
+  content:"";position:absolute;left:0;top:7px;
+  width:5px;height:5px;border-radius:50%;background:var(--gold);
+}
+.col.eng li::before{border-radius:1px;background:var(--text-3);top:8px}
+.col li b{color:var(--text);font-weight:600}
+.col.eng li{font-family:"IBM Plex Mono",monospace;font-size:12px;line-height:1.55}
+.col.eng li b{font-weight:600}
+
+.callout{
+  border-left:2px solid var(--gold);padding:2px 0 2px 16px;
+  font-size:13.5px;line-height:1.6;color:var(--text-2);max-width:62ch;
+}
+.callout b{color:var(--text);font-weight:600}
+
+.metrics{display:flex;flex-wrap:wrap;gap:10px}
+.metric{border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--card);min-width:120px}
+.metric .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);font-weight:700}
+.metric .v{font-family:"Newsreader",Georgia,serif;font-size:22px;letter-spacing:-.02em;margin-top:2px;font-variant-numeric:tabular-nums}
+.metric .n{font-size:11px;color:var(--text-2);margin-top:1px}
+
+.footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:14px 30px;justify-content:space-between;align-items:baseline}
+.footer p{margin:0;font-size:12px;color:var(--text-3);max-width:70ch;line-height:1.6}
+
+@media (max-width:1000px){
+  .stage{grid-template-columns:1fr;gap:40px;justify-items:center}
+  .device-col{position:static;width:100%;max-width:390px}
+  .notes-col{width:100%}
+}
+@media (max-width:520px){
+  .page{padding:26px 16px 56px}
+  .device{border-radius:36px;padding:8px}
+  .screen{height:660px;border-radius:29px}
+  .mark h1{font-size:25px}
 }
 </style>
 
-<div class="app-shell">
+<div class="page">
 
-  <!-- ================= DEVICE ================= -->
-    <div class="device-slot">
+  <header class="masthead">
+    <div class="mark">
+      <span class="mark-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E39B2C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 13V4.8a1.3 1.3 0 0 1 2.6 0V11"/>
+          <path d="M10.6 11V3.6a1.3 1.3 0 0 1 2.6 0V11"/>
+          <path d="M13.2 11.4V5.2a1.3 1.3 0 0 1 2.6 0V13"/>
+          <path d="M15.8 8.6a1.3 1.3 0 0 1 2.6 0v6.2a6 6 0 0 1-6 6h-1a5 5 0 0 1-4.3-2.5L4 13.4a1.4 1.4 0 0 1 2.3-1.6L8 14"/>
+        </svg>
+      </span>
+      <div>
+        <h1>Helping Hand</h1>
+        <p>Interactive mockup &middot; Seed case study 2026</p>
+      </div>
+    </div>
+    <p class="masthead-note">Nine screens of the MVP, wired up and clickable. Tap the phone's tab bar or pick a flow below &mdash; the panel alongside carries each screen's job, its features, and the backend it needs. Every figure shown comes from the case study.</p>
+  </header>
+
+  <nav class="rail" aria-label="Screens">
+    <div class="rail-label">Flows</div>
+    <div class="rail-track" id="rail">
+      <button class="chip" data-go="home"      aria-pressed="true"><span class="num">01</span> Impact home</button>
+      <button class="chip" data-go="profile"   aria-pressed="false"><span class="num">02</span> Profile</button>
+      <button class="chip" data-go="events"    aria-pressed="false"><span class="num">03</span> Local events</button>
+      <button class="chip" data-go="travel"    aria-pressed="false"><span class="num">04</span> Travel Mode</button>
+      <button class="chip" data-go="spotlight" aria-pressed="false"><span class="num">05</span> Charity spotlight</button>
+      <button class="chip" data-go="scan"      aria-pressed="false"><span class="num">06</span> Scan a charity</button>
+      <button class="chip" data-go="emergency" aria-pressed="false"><span class="num">07</span> State of emergency</button>
+      <button class="chip" data-go="bank"      aria-pressed="false"><span class="num">08</span> The Bank</button>
+      <button class="chip" data-go="passport"  aria-pressed="false"><span class="num">09</span> Impact Passport</button>
+    </div>
+  </nav>
+
+  <div class="stage">
+
+    <!-- ================= DEVICE ================= -->
+    <div class="device-col">
       <div class="device">
         <div class="screen">
 
@@ -360,12 +463,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
           </div>
 
           <div class="appbar">
-            <div class="row" style="gap:9px;min-width:0">
-              <button id="backBtn" aria-label="Back" hidden>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-              </button>
-              <div class="wordmark">Helping&nbsp;<span>Hand</span></div>
-            </div>
+            <div class="wordmark">Helping&nbsp;<span>Hand</span></div>
             <div class="appbar-icons">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>
@@ -376,13 +474,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
             <!-- ---------- 01 HOME ---------- -->
             <section class="view" id="v-home">
-              <button class="alert" data-go="emergency" style="width:100%;text-align:left">
+              <div class="alert" role="status">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 9v5"/><circle cx="12" cy="17.2" r=".9" fill="currentColor" stroke="none"/></svg>
                 <div>
                   <div class="t">California is in a state of emergency</div>
                   <div class="s">Verified 14 min ago &middot; 3 volunteer sites near you need help</div>
                 </div>
-              </button>
+              </div>
 
               <div class="card">
                 <div class="ring-wrap">
@@ -1263,7 +1361,297 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
       </div>
     </div>
 
-    
+    <!-- ================= NOTES ================= -->
+    <div class="notes-col">
+
+      <article class="note on" data-note="home">
+        <div class="note-head">
+          <div class="note-kicker"><span class="n">01</span> Impact home</div>
+          <h2>The habit loop, not the donate button.</h2>
+        </div>
+        <p class="note-lede">A giving app people open once a year is a website. Home leads with <b>what changed since yesterday</b> &mdash; a live emergency, your streak, one small mission &mdash; so the daily action is verifying, not spending. Points, ranks (Supporter &rarr; Advocate &rarr; Champion &rarr; Hero), and streaks are Phase&nbsp;1 of the gamification track.</p>
+        <div class="cols">
+          <div class="col">
+            <h3>On this screen</h3>
+            <ul>
+              <li><b>Impact Points</b> for donating, verifying, volunteering, sharing</li>
+              <li>Rank ring with the next threshold named, not just a bar</li>
+              <li><b>Daily mission</b> &mdash; "verify one nonprofit," worth 25 pts</li>
+              <li>3-, 7-, and 30-day streaks</li>
+              <li>Verified emergency banner, geofenced to the user</li>
+              <li>Monthly giving strip that opens the ledger</li>
+            </ul>
+          </div>
+          <div class="col eng">
+            <h3>Backend</h3>
+            <ul>
+              <li><b>Points ledger</b> &mdash; append-only, server-awarded only</li>
+              <li><b>Feed ranker</b> &mdash; geo + cause affinity + recency</li>
+              <li><b>Streak job</b> &mdash; nightly, user-local timezone</li>
+              <li><b>Push</b> &mdash; emergency + streak-risk, opt-in</li>
+            </ul>
+          </div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="k">Phase 1 KPI</div><div class="v">DAU/WAU</div><div class="n">daily use consistency</div></div>
+          <div class="metric"><div class="k">Phase 1 KPI</div><div class="v">Streak len.</div><div class="n">average days unbroken</div></div>
+          <div class="metric"><div class="k">Phase 1 KPI</div><div class="v">Actions</div><div class="n">per session</div></div>
+        </div>
+      </article>
+
+      <article class="note" data-note="profile">
+        <div class="note-head">
+          <div class="note-kicker"><span class="n">02</span> Profile</div>
+          <h2>A personal hub, at home or abroad.</h2>
+        </div>
+        <p class="note-lede">The profile is where someone declares what they care about, flips on <b>Traveling Mode</b>, manages how they give, and decides who can see them. Visibility is opt-in at every level &mdash; that's what makes the social layer usable by people volunteering on sensitive causes.</p>
+        <div class="cols">
+          <div class="col">
+            <h3>On this screen</h3>
+            <ul>
+              <li>Photo, city, and a written mission statement</li>
+              <li><b>Traveling Mode</b> toggle unlocks global volunteering</li>
+              <li>Linked cards and PayPal, with a default for receipts</li>
+              <li>Volunteer itinerary, synced to the calendar</li>
+              <li>Per-setting privacy: activity, alerts, organizer DMs</li>
+            </ul>
+          </div>
+          <div class="col eng">
+            <h3>Backend</h3>
+            <ul>
+              <li><b>Auth</b> &mdash; email/OAuth, photo upload to object storage</li>
+              <li><b>User schema</b> &mdash; interests, location, travel window, prefs</li>
+              <li><b>Payments</b> &mdash; Stripe + PayPal tokens, never raw PANs</li>
+              <li><b>Messaging</b> &mdash; realtime channel gated on privacy flags</li>
+              <li><b>Calendar</b> &mdash; two-way itinerary sync</li>
+            </ul>
+          </div>
+        </div>
+        <p class="callout">Toggle Traveling Mode in the mockup &mdash; it collapses the trip block, the same way the real thing hides global programs from users who aren't going anywhere.</p>
+      </article>
+
+      <article class="note" data-note="events">
+        <div class="note-head">
+          <div class="note-kicker"><span class="n">03</span> Local events</div>
+          <h2>Community at walking distance.</h2>
+        </div>
+        <p class="note-lede">Registration confirms instantly and then answers the questions that actually stop people from showing up: who else is going, what to bring, and is the host legitimate. <b>Only charities verified on Helping Hand can post events</b>, so the host's program ratio sits right in the detail list.</p>
+        <div class="cols">
+          <div class="col">
+            <h3>On this screen</h3>
+            <ul>
+              <li>Instant RSVP confirmation with a reference number</li>
+              <li>Time, place, spots remaining at a glance</li>
+              <li>Attendee previews and direct messaging</li>
+              <li>Host EIN + program ratio surfaced inline</li>
+              <li>Check-in on arrival awards points</li>
+            </ul>
+          </div>
+          <div class="col eng">
+            <h3>Backend</h3>
+            <ul>
+              <li><b>Event store</b> + calendar API integration</li>
+              <li><b>RSVP sync</b> &mdash; realtime capacity, no overbooking</li>
+              <li><b>Charity dashboard</b> for nonprofits to post and staff events</li>
+              <li><b>Geo filtering</b> for hyperlocal discovery</li>
+              <li><b>Check-in</b> &mdash; geofence or host QR, anti-fraud on points</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="note" data-note="travel">
+        <div class="note-head">
+          <div class="note-kicker"><span class="n">04</span> Travel Mode</div>
+          <h2>Your trip, with a reason attached.</h2>
+        </div>
+        <p class="note-lede">Destination plus dates plus the causes you picked, matched against vetted programs actually running while you're there. This is the feature no incumbent has: <b>ShareTheMeal isn't travel-aware, GoFundMe isn't location-specific</b>, and neither connects a traveler to a program on the ground.</p>
+        <div class="cols">
+          <div class="col">
+            <h3>On this screen</h3>
+            <ul>
+              <li>Destination and travel window</li>
+              <li>Cause filters: Clean Water, Women's Rights, Education, Disease, Environment, Hunger</li>
+              <li>Skills offered, so hosts can place people usefully</li>
+              <li>Only vetted nonprofit partners appear</li>
+              <li><b>Phase 2:</b> live-stream volunteer work in-app</li>
+            </ul>
+          </div>
+          <div class="col eng">
+            <h3>Backend</h3>
+            <ul>
+              <li><b>Geo matcher</b> &mdash; country/city &times; charity index</li>
+              <li><b>Availability query</b> &mdash; programs overlapping the date range</li>
+              <li><b>Affinity ranking</b> on declared causes and past actions</li>
+              <li><b>Traveler&rarr;charity messaging</b>, host-approved</li>
+              <li><b>Phase 2:</b> Twilio Video or Agora, approved NGOs only</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="note" data-note="spotlight">
+        <div class="note-head">
+          <div class="note-kicker"><span class="n">05</span> Charity spotlight</div>
+          <h2>A real project, priced out loud.</h2>
+        </div>
+        <p class="note-lede">The listing a traveler lands on. Beyond dates and a sign-up button, it publishes the <b>program expense ratio and a line-item breakdown of what the work costs</b> &mdash; drilling, pumps, training. Verified partners get exclusive placement, which is what makes verification worth applying for.</p>
+        <div class="cols">
+          <div class="col">
+            <h3>On this screen</h3>
+            <ul>
+              <li>Project card with mission, dates, and location</li>
+              <li>Prominent sign-up, joined to profile and calendar</li>
+              <li>"Helping Hand Verified" badge plus visible EIN</li>
+              <li>Line items for what the two weeks funds</li>
+              <li>Explicit note on what data the host receives</li>
+            </ul>
+          </div>
+          <div class="col eng">
+            <h3>Backend</h3>
+            <ul>
+              <li><b>Partner CMS</b> where vetted nonprofits post opportunities</li>
+              <li><b>Event schema</b> &mdash; dates, roles, availability</li>
+              <li><b>Badge service</b> &mdash; AI screen + manual audit trail</li>
+              <li><b>Engagement logs</b> feeding public transparency reports</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="note" data-note="scan">
+        <div class="note-head">
+          <div class="note-kicker"><span class="n">06</span> Scan a charity</div>
+          <h2>Point your camera at the ask.</h2>
+        </div>
+        <p class="note-lede">The core differentiator. OCR reads a sign, flyer, or billboard; the app pulls IRS and third-party records and returns a ratio with a verdict. <b>Verified is not the same as recommended</b> &mdash; the app shows the number and lets the donor decide, which is why an active 501(c)(3) can still come back red.</p>
+        <div class="cols">
+          <div class="col">
+            <h3>Try all three verdicts</h3>
+            <ul>
+              <li><b>Green &middot; 80%</b> Shriners Hospitals for Children &mdash; strong pass-through, with the 20% admin share disclosed anyway</li>
+              <li><b>Amber &middot; 64%</b> Charity Miles &mdash; legitimate, sponsor-funded, heavy overhead</li>
+              <li><b>Red &middot; 33%</b> BLM Global Network Foundation &mdash; EIN valid, roughly $30M of $90M passed through</li>
+            </ul>
+          </div>
+          <div class="col eng">
+            <h3>Backend</h3>
+            <ul>
+              <li><b>OCR</b> on signage, logos, and printed appeals</li>
+              <li><b>Data joins</b> &mdash; IRS Pub 78, GuideStar, Charity Navigator</li>
+              <li><b>EIN check</b> &mdash; active and in good standing</li>
+              <li><b>Ratio calc</b> from Form 990 program vs. total expense</li>
+              <li><b>Routing gate</b> &mdash; only verified 501(c)(3)s accept funds</li>
+            </ul>
+          </div>
+        </div>
+        <p class="callout">Every figure in the scan results is an <b>estimate from public filings and investigative reporting</b>, and the screen says so. Publishing a number about a real organization without its provenance is how a trust product loses trust.</p>
+      </article>
+
+      <article class="note" data-note="emergency">
+        <div class="note-head">
+          <div class="note-kicker"><span class="n">07</span> State of emergency</div>
+          <h2>Answers, while the fire is still burning.</h2>
+        </div>
+        <p class="note-lede">In a crisis the scarce resource isn't goodwill, it's coordination. This screen tells a donor <b>what today's money bought and at what hour it cleared</b>, and tells a volunteer which sites still have room and which are full. Campaigns only open after a state or county agency confirms the incident.</p>
+        <div class="cols">
+          <div class="col">
+            <h3>On this screen</h3>
+            <ul>
+              <li>Alert banner with verification source and timestamp</li>
+              <li>Your donation beside the platform-wide total</li>
+              <li>Hour-by-hour record of released funds and what they bought</li>
+              <li>Funds held pending verification, shown as held</li>
+              <li>Volunteer sites with live capacity, including "at capacity"</li>
+            </ul>
+          </div>
+          <div class="col eng">
+            <h3>Backend</h3>
+            <ul>
+              <li><b>Alert intake</b> from verified agency feeds, then push</li>
+              <li><b>Geo tagging</b> so needs match the user's area</li>
+              <li><b>Live tracker</b> split by campaign and category</li>
+              <li><b>Capacity manager</b> for volunteer sites</li>
+              <li><b>Agency dashboard</b> to update supply needs in realtime</li>
+            </ul>
+          </div>
+        </div>
+        <p class="callout">Named as a GTM wedge in the case study: <b>activate during a real crisis</b> &mdash; U.S. wildfire season &mdash; where the value is self-evident and the alternative is a dozen unverified fundraisers on social media.</p>
+      </article>
+
+      <article class="note" data-note="bank">
+        <div class="note-head">
+          <div class="note-kicker"><span class="n">08</span> The Bank</div>
+          <h2>Donations in, named recipients out.</h2>
+        </div>
+        <p class="note-lede">All giving routes through the Helping Hand <b>501(c)(3)</b> and is released only against a verified need &mdash; a shelter, a well casing, 14 bed-nights. The for-profit entity earns from platform fees, nonprofit tools, and CSR sponsorship. <b>No investor profit is ever drawn from donations.</b></p>
+        <div class="cols">
+          <div class="col">
+            <h3>On this screen</h3>
+            <ul>
+              <li>All-time given, with a trend and a zero-fee statement</li>
+              <li>Ledger of disbursements: cause, recipient, clearing date</li>
+              <li>Traced / pending / receipts as separate views</li>
+              <li>Auto-generated, IRS-compliant annual tax receipt</li>
+              <li>The four-step money path, stated plainly</li>
+              <li>Link out to the public platform-wide dashboard</li>
+            </ul>
+          </div>
+          <div class="col eng">
+            <h3>Backend</h3>
+            <ul>
+              <li><b>Donor wallet</b> + receipt generation</li>
+              <li><b>Disbursement automation</b> &mdash; Stripe or secure ACH</li>
+              <li><b>Grant-manager console</b> and internal accounting</li>
+              <li><b>Phase 2:</b> AI need-verification to prioritize emergency release</li>
+            </ul>
+          </div>
+        </div>
+        <p class="callout">The case study's own cautionary examples &mdash; <b>$114M in Project Roomkey grants</b> and roughly $60M retained at BLMGNF &mdash; are both failures of release-time oversight, not of intent. The ledger is the product's answer to them.</p>
+      </article>
+
+      <article class="note" data-note="passport">
+        <div class="note-head">
+          <div class="note-kicker"><span class="n">09</span> Impact Passport</div>
+          <h2>Proof you can't buy.</h2>
+        </div>
+        <p class="note-lede">Phases 2 through 5 of the gamification track: squads, leaderboards, brand rewards, and a passport of global stamps. The rule that keeps it honest is that <b>a stamp requires a host check-in or a cleared ledger entry</b> &mdash; nothing here is self-reported.</p>
+        <div class="cols">
+          <div class="col">
+            <h3>On this screen</h3>
+            <ul>
+              <li><b>Impact Passport</b> &mdash; stamps for verified actions, locked ones visible</li>
+              <li><b>Leaderboards</b> by city, campus, or friends</li>
+              <li><b>Squads</b> with a shared goal &mdash; "Feed 100 Families"</li>
+              <li><b>CSR rewards</b> from partner brands like REI or Patagonia</li>
+              <li>Shareable brag badges for Instagram and TikTok</li>
+            </ul>
+          </div>
+          <div class="col eng">
+            <h3>Backend</h3>
+            <ul>
+              <li><b>Award engine</b> &mdash; server-side rules over verified events</li>
+              <li><b>Leaderboard aggregates</b>, scoped and periodically reset</li>
+              <li><b>Reward vault</b> &mdash; partner codes, redemption caps</li>
+              <li><b>Share renderer</b> &mdash; server-generated badge images</li>
+            </ul>
+          </div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="k">Phase 2</div><div class="v">Teams</div><div class="n">% in squads vs. solo</div></div>
+          <div class="metric"><div class="k">Phase 3</div><div class="v">Redeem</div><div class="n">reward redemption rate</div></div>
+          <div class="metric"><div class="k">Phase 4</div><div class="v">90-day</div><div class="n">retention</div></div>
+          <div class="metric"><div class="k">Phase 5</div><div class="v">Cross-border</div><div class="n">% of engagement abroad</div></div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p><b>Mockup, not a live product.</b> Screens, copy, and figures are drawn from the Helping Hand seed case study; charity ratios are estimates from public Form 990 filings, IRS Pub 78, Charity Navigator, and investigative reporting, and are shown as such in-app. Nothing here processes real money.</p>
+    <p class="mono" style="font-size:11px">9 SCREENS &middot; MVP SCOPE</p>
+  </footer>
 </div>
 
 <script>
@@ -1280,23 +1668,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   }
 
   var views = document.getElementById('views');
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
   var tabs  = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var notes = Array.prototype.slice.call(document.querySelectorAll('.note'));
 
-  var stack = [];
-  var current = 'home';
-  var backBtn = document.getElementById('backBtn');
-
-  // Only the tab bar resets the trail. Reaching a tab root from in-app content
-  // (emergency -> Donate now -> The Bank) still pushes, so Back returns to the campaign.
-  function go(id, isBack, fromTab){
+  function go(id){
     var target = document.getElementById('v-' + id);
     if(!target) return;
-    if(!isBack && id !== current){
-      if(fromTab) stack = [];
-      else stack.push(current);
-    }
-    current = id;
-    backBtn.hidden = stack.length === 0;
     Array.prototype.forEach.call(views.children, function(v){
       v.hidden = (v !== target);
       v.classList.remove('enter');
@@ -1305,19 +1683,18 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     target.classList.add('enter');
     target.scrollTop = 0;
 
+    chips.forEach(function(c){ c.setAttribute('aria-pressed', String(c.dataset.go === id)); });
+    notes.forEach(function(n){ n.classList.toggle('on', n.dataset.note === id); });
+
     // tab bar: map sub-screens onto their parent tab
     var parent = {home:'home', profile:'profile', events:'events', travel:'profile',
                   spotlight:'events', scan:'scan', emergency:'home', bank:'bank', passport:'events'}[id];
     tabs.forEach(function(t){ t.setAttribute('aria-pressed', String(t.dataset.go === parent)); });
   }
 
-  backBtn.addEventListener('click', function(){
-    if(stack.length) go(stack.pop(), true);
-  });
-
   document.addEventListener('click', function(e){
     var nav = e.target.closest('[data-go]');
-    if(nav){ go(nav.dataset.go, false, nav.classList.contains('tab')); return; }
+    if(nav){ go(nav.dataset.go); return; }
 
     var scan = e.target.closest('[data-scan]');
     if(scan){
